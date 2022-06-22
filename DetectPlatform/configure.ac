@@ -22,6 +22,22 @@ AC_INCLUDES_DEFAULT
 
 AM_INIT_AUTOMAKE([foreign -Wall -Werror subdir-objects])
 
+# Check for request to build for Cygwin
+AC_ARG_ENABLE([with-cygwin],
+    [AS_HELP_STRING([--enable-with-cygwin],
+        [enable cygwin configured build @<:default: yes@:>])],
+    [with_cygwin=${enableval}], [with_cygwin=no])
+
+request_cygwin=no    
+
+if test "x${with_cygwin}" = xyes; then
+  request_cygwin=yes
+fi    
+
+if test "x${with_cygwin}" = xno; then
+  request_cygwin=no
+fi            
+
 AC_CANONICAL_HOST
 
 AC_MSG_CHECKING([for kernel type ($host_os)])
@@ -89,17 +105,30 @@ case $host_os in
       -----------------------------
     ])        
     ;;
-  *mingw32*)
-    AC_DEFINE([KERNEL_WIN32], [1], [True if program is to be compiled for a Windows kernel])
-    ac_system="Windows"
-    ;;
+  # *mingw32*)
+  #   AC_DEFINE([KERNEL_WIN32], [1], [True if program is to be compiled for a Windows kernel])
+  #   ac_system="Windows"
+  #   ;;
   *)
-    ac_system="unknown"
-    AC_MSG_WARN([
-      -----------------------------
-      Kernel not recognized.
-      -----------------------------
-    ])        
+    # Was Windows/Cygwin requested?
+    if test "x${request_cygwin}" = xyes; then
+      AC_DEFINE([KERNEL_WIN32], [1], [True if program is to be compiled for a Windows kernel])
+      ac_system="Windows"
+      AC_MSG_NOTICE([
+        -----------------------------
+        Cygwin kernel requested.
+        -----------------------------
+      ])        
+    fi    
+
+    if test "x${request_cygwin}" = xno; then
+      ac_system="unknown"
+      AC_MSG_WARN([
+        -----------------------------
+        Kernel not recognized.
+        -----------------------------
+      ])
+    fi        
     ;;
 esac
 AC_MSG_RESULT([$ac_system])
