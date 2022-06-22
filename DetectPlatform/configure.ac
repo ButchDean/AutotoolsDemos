@@ -32,11 +32,7 @@ request_cygwin=no
 
 if test "x${with_cygwin}" = xyes; then
   request_cygwin=yes
-fi    
-
-if test "x${with_cygwin}" = xno; then
-  request_cygwin=no
-fi            
+fi       
 
 AC_CANONICAL_HOST
 
