@@ -115,9 +115,7 @@ case $host_os in
         Cygwin kernel requested.
         -----------------------------
       ])        
-    fi    
-
-    if test "x${request_cygwin}" = xno; then
+	else
       ac_system="unknown"
       AC_MSG_WARN([
         -----------------------------
