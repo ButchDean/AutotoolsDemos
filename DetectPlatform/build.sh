@@ -1,18 +1,9 @@
 #!/usr/bin/bash
 
-build_for_cygwin=false
-
-while getopts "w" opt; do
-    case $opt in
-        w)
-            build_for_cygwin=true
-        ;;
-    esac
-done
-
 autoreconf -i
 
-if [ "$build_for_cygwin" = true ] ; then
+os_name="$(uname)"
+if test "${os_name#CYGWIN}" != "$os_name"; then
     ./configure --enable-with-cygwin
 else
     ./configure
